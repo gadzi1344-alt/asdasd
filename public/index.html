@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1620">
+<meta name="description" content="PearWallet — кошелёк GRAM и PearStars с доменами .pear">
+<title>PearWallet</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&subset=cyrillic&display=swap">
+<style>
+:root{--bg:#0f1620;--cd:#1b2431;--cd2:#232e3d;--ac:#3fa9f5;--mu:#7a8795;--tx:#fff;--st:#f5a623;--ok:#4cd07d;--no:#ff6b6b;color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--tx);font:500 16px/1.35 Montserrat,system-ui,sans-serif}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+svg{width:24px;height:24px;display:block}
+#app{max-width:480px;margin:0 auto;min-height:100%;padding:calc(env(safe-area-inset-top,0px)+12px) 16px calc(env(safe-area-inset-bottom,0px)+100px)}
+.bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.ib{width:40px;height:40px;display:grid;place-items:center;color:#e8edf3}
+.rt{display:flex;gap:4px}
+.pill{background:var(--cd);border-radius:999px;padding:10px 16px;display:flex;align-items:center;gap:8px;font-weight:700;font-size:16px}
+.pill svg{width:18px;height:18px}
+.bal{text-align:center;margin:32px 0 20px}
+.bal b{font-size:46px;font-weight:700;letter-spacing:-1px}
+.bal em{font-style:normal;color:#6b7785;font-size:22px}
+.ad{display:flex;gap:6px;align-items:center;justify-content:center;margin:8px auto 0;color:var(--mu);font-size:15px}
+.ad svg{width:16px;height:16px}
+.qa{display:flex;justify-content:center;gap:18px;margin-bottom:18px;flex-wrap:wrap}
+.qa div{text-align:center;width:70px}
+.rc{width:52px;height:52px;border-radius:50%;background:var(--cd);display:grid;place-items:center;margin:0 auto 6px}
+.qa span{font-size:11px;color:var(--mu)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.bx{background:var(--cd);border-radius:16px;padding:14px;text-align:left}
+.bx svg{color:var(--ac);width:22px;height:22px;margin-bottom:6px}
+.bx b{display:block;font-size:15px;font-weight:700}
+.bx small{color:var(--mu);font-size:12px}
+h1{font-size:26px;font-weight:800;margin:0 0 12px}
+h2{font-size:20px;font-weight:700;margin:0 0 10px}
+.lst{background:var(--cd);border-radius:16px;overflow:hidden}
+.rw{display:flex;align-items:center;gap:12px;padding:13px 14px;width:100%;text-align:left}
+.rw+.rw{border-top:1px solid #263243}
+.coin{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;flex:none;color:#fff;background:#42aef7}
+.coin.s{background:var(--st)}.coin.d{background:#9b59b6}.coin.n{background:#1abc9c}
+.coin svg{width:18px;height:18px}
+.rw .g{flex:1;min-width:0}
+.rw b{font-size:15px;font-weight:700}
+.rw small{color:var(--mu);font-size:12px;display:block}
+.rw .r{text-align:right;flex:none;font-weight:700}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--bg);display:flex;justify-content:center;border-top:1px solid #18212d;padding-bottom:env(safe-area-inset-bottom,0px);z-index:6}
+nav button{flex:1;max-width:130px;padding:9px 0 11px;color:var(--mu);font-size:11px;font-weight:600}
+nav button.on{color:var(--ac)}
+nav svg{width:26px;height:26px;margin:0 auto 2px}
+#ov{position:fixed;inset:0;background:var(--bg);display:none;z-index:8;overflow:auto}
+#ov.on{display:block}
+.pg{max-width:480px;margin:0 auto;min-height:100%;padding:calc(env(safe-area-inset-top,0px)+12px) 16px calc(env(safe-area-inset-bottom,0px)+20px);display:flex;flex-direction:column}
+.t2{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;margin-bottom:14px}
+.t2 b{text-align:center;font-size:17px;font-weight:700}
+.rb{width:38px;height:38px;border-radius:50%;background:var(--cd);display:grid;place-items:center}
+.inp{display:flex;align-items:center;gap:8px;background:var(--cd);border:2px solid var(--ac);border-radius:14px;padding:0 12px;height:52px}
+.inp input{flex:1;min-width:0;background:none;border:0;outline:0;color:#fff;font:inherit;font-size:15px}
+.inp input::placeholder{color:#566272}
+.inp a,.lk{color:var(--ac);font-weight:700;cursor:pointer;font-size:14px}
+.inp.n{border-color:transparent}
+.fl{flex:1}
+.pb{width:100%;height:52px;border-radius:14px;background:var(--ac);color:#fff;font-weight:700;font-size:16px;margin-top:10px}
+.pb:disabled{background:#285b82;color:#6f8798}
+.pb.sc{background:var(--cd)}
+.seg{display:flex;background:var(--cd);border-radius:12px;padding:3px;margin-bottom:14px}
+.seg button{flex:1;padding:9px 4px;border-radius:10px;color:var(--mu);font-weight:700;font-size:14px}
+.seg button.on{background:var(--cd2);color:#fff}
+.amt{text-align:center;margin:6px 0}
+.amt input{width:100%;text-align:center;background:none;border:0;outline:0;color:#fff;font:800 40px Montserrat,sans-serif}
+.hint{text-align:center;color:var(--mu);font-size:13px;margin-bottom:14px}
+.msg{color:var(--no);min-height:18px;font-size:13px;text-align:center;margin-top:6px}
+#sh{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;z-index:9}
+#sh.on{display:flex}
+.pan{width:100%;max-width:480px;margin:0 auto;background:var(--bg);border-radius:22px 22px 0 0;padding:8px 14px calc(env(safe-area-inset-bottom,0px)+14px);max-height:90vh;overflow-y:auto}
+.hdl{display:block;width:36px;height:4px;border-radius:2px;background:#2c3745;margin:0 auto 10px}
+.hd{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;margin-bottom:6px}
+.hd h3{grid-column:2;margin:0;text-align:center;font-size:18px;font-weight:700}
+.hd .rb{grid-column:3}
+.sub{text-align:center;color:var(--mu);font-size:14px;margin:0 12px 12px}
+.bn{text-align:center;font-size:30px;font-weight:800}
+.act{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.act button{height:50px;border-radius:14px;background:var(--cd);display:flex;gap:8px;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.act button.p{background:#42aef7}
+.act button.w{grid-column:1/3}
+.act svg{width:18px;height:18px}
+.qc{background:var(--cd);border-radius:18px;padding:14px;text-align:center}
+.qr{background:#fff;border-radius:16px;padding:10px;width:min(100%,190px);margin:0 auto 10px;aspect-ratio:1}
+.qr svg{width:100%;height:100%}
+.qc b{font-size:18px}
+.qc code{display:block;color:var(--mu);font:500 12px/1.4 ui-monospace,Menlo,monospace;word-break:break-all;margin:6px 0}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #1d2837;font-size:14px}
+.kv span:first-child{color:var(--mu)}
+.kv span:last-child{text-align:right;word-break:break-all;font-weight:600}
+.dh{color:var(--mu);font-size:12px;margin:12px 4px 4px;font-weight:600}
+.hi{width:38px;height:38px;border-radius:50%;background:rgba(63,169,245,.15);color:var(--ac);display:grid;place-items:center;flex:none}
+.hi.in{background:rgba(76,208,125,.15);color:var(--ok)}
+.hi svg{width:16px;height:16px}
+.pos{color:var(--ok)}
+.ok{width:80px;height:80px;margin:40px auto 12px}
+.ok circle{fill:var(--ok)}
+.ok path{fill:none;stroke:#fff;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:60;stroke-dashoffset:60;animation:dr .45s .1s forwards}
+@keyframes dr{to{stroke-dashoffset:0}}
+.cen{text-align:center}
+.emp{text-align:center;color:var(--mu);padding:30px 14px;font-size:14px}
+#toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px)+95px);transform:translateX(-50%);background:var(--cd2);padding:11px 16px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s;z-index:20;max-width:88%}
+#toast.on{opacity:1}
+.price-tag{background:rgba(245,166,35,.18);color:var(--st);padding:3px 9px;border-radius:999px;font-size:12px;font-weight:700}
+.domain-card{background:linear-gradient(145deg,#1b2431,#252f40);border-radius:16px;padding:16px;margin-bottom:12px;border:1px solid #2a3544}
+.domain-card .big{font-size:20px;font-weight:800;margin:6px 0}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.chp{background:var(--cd);color:var(--mu);border-radius:999px;padding:8px 14px;font-weight:700;font-size:13px}
+.chp.on{background:var(--ac);color:#fff}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+.stt{background:var(--cd);border-radius:12px;padding:12px;text-align:center}
+.stt b{display:block;font-size:18px;font-weight:800}
+.stt small{color:var(--mu);font-size:11px}
+.badge{display:inline-block;background:var(--ac);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;margin-left:4px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="ov"></div>
+<div id="sh"></div>
+<div id="toast"></div>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>
+const API='';
+let ADDR=localStorage.getItem('pw_addr')||'UQBpEaR9xKm3TvLd7Zc2Yq-4wNfHs8JuGoX1eVt6Rb0AyCMk';
+const DOM='tess.pear';
+const RATE=100,FEE=0.01,DOMAIN_PRICE=10000;
+let S={gram:0,stars:0,stake:0,hist:[],own:{u:[],n:[],g:[],d:[]}};
+let DEMO_MODE=false;
+let tab='w', mkT='u', SD={}, SW={d:'s'};
+
+const $=id=>document.getElementById(id);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fg=n=>(+n).toLocaleString('ru-RU',{maximumFractionDigits:4});
+const fa=(c,a)=>c==='s'?fg(Math.round(a))+' ★':fg(a)+' GRAM';
+const shortTo=v=>v&&v.length>16?v.slice(0,5)+'…'+v.slice(-4):v;
+
+const P={
+scan:'<path d="M4 8V6a2 2 0 012-2h2M16 4h2a2 2 0 012 2v2M20 16v2a2 2 0 01-2 2h-2M8 20H6a2 2 0 01-2-2v-2M7 12h10"/>',
+clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+gear:'<path d="M12.22 2h-.44a2 2 0 00-2 2v.18a2 2 0 01-1 1.73l-.43.25a2 2 0 01-2 0l-.15-.08a2 2 0 00-2.73.73l-.22.38a2 2 0 00.73 2.73l.15.1a2 2 0 011 1.72v.51a2 2 0 01-1 1.74l-.15.09a2 2 0 00-.73 2.73l.22.38a2 2 0 002.73.73l.15-.08a2 2 0 012 0l.43.25a2 2 0 011 1.73V20a2 2 0 002 2h.44a2 2 0 002-2v-.18a2 2 0 011-1.73l.43-.25a2 2 0 012 0l.15.08a2 2 0 002.73-.73l.22-.39a2 2 0 00-.73-2.73l-.15-.08a2 2 0 01-1-1.74v-.5a2 2 0 011-1.74l.15-.09a2 2 0 00.73-2.73l-.22-.38a2 2 0 00-2.73-.73l-.15.08a2 2 0 01-2 0l-.43-.25a2 2 0 01-1-1.73V4a2 2 0 00-2-2z"/><circle cx="12" cy="12" r="3"/>',
+copy:'<rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V7a3 3 0 013-3h8"/>',
+up:'<path d="M12 19V5M5 12l7-7 7 7"/>',down:'<path d="M12 5v14M5 12l7 7 7-7"/>',
+store:'<path d="M4 9l1.5-5h13L20 9M4 9v1a2.7 2.7 0 005.3 0 2.7 2.7 0 005.4 0A2.7 2.7 0 0020 10V9M5.5 13v7h13v-7"/>',
+swap:'<path d="M4 8h15M15 4l4 4-4 4M20 16H5M9 12l-4 4 4 4"/>',
+gift:'<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v8h14v-8M12 8v12"/>',
+at:'<circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 006 0v-1a10 10 0 10-4 8"/>',
+phone:'<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/>',
+plus:'<path d="M12 5v14M5 12h14"/>',trend:'<path d="M3 17l6-6 4 4 8-8M15 7h6v6"/>',
+gem:'<path d="M7.5 4.5h9L21 10l-9 10L3 10z"/>',star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+chev:'<path d="M6 9l6 6 6-6"/>',back:'<path d="M15 5l-7 7 7 7"/>',x:'<path d="M6 6l12 12M18 6L6 18"/>',
+share:'<circle cx="18" cy="5.5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="18.5" r="2.5"/><path d="M8.2 10.8l7.6-4.1M8.2 13.2l7.6 4.1"/>',
+wf:'<path d="M4 8a3 3 0 013-3h9a1 1 0 011 1v2H7.5a.5.5 0 000 1H19a2 2 0 012 2v7a3 3 0 01-3 3H7a3 3 0 01-3-3z"/>',
+df:'<path d="M7 4h10l5 5.5-10 11-10-11z"/>',sf:'<path d="M4 4h16l1.2 5.5a3.1 3.1 0 01-6.2.5 3.1 3.1 0 01-6 0 3.1 3.1 0 01-6.2-.5zM5 13h14v8H5z"/>',
+globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 010 18 15 15 0 010-18"/>'
+};
+function ic(n,f){return '<svg viewBox="0 0 24 24" '+(f?'fill="currentColor"':'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"')+'>'+(P[n]||'')+'</svg>'}
+function coin(k){return '<div class="coin '+(k==='s'?'s':k==='d'?'d':k==='n'?'n':'')+'">'+ic(k==='s'?'star':k==='d'?'globe':k==='n'?'phone':'gem')+'</div>'}
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');clearTimeout(window._tt);window._tt=setTimeout(()=>e.classList.remove('on'),2000)}
+function kv(k,v){return '<div class="kv"><span>'+k+'</span><span>'+v+'</span></div>'}
+function qr(t){try{const q=qrcode(0,'M');q.addData(t);q.make();return q.createSvgTag({cellSize:4,margin:0,scalable:true})}catch(e){return ''}}
+function okTo(v){return /^(UQ|EQ)[A-Za-z0-9_-]{46}$/.test(v)||/^[a-z0-9-]{3,}\.pear$/i.test(v)||/^@[A-Za-z0-9_]{5,32}$/.test(v)||/^[a-z0-9_]{3,32}$/i.test(v)}
+
+async function api(path,opts={}){
+  const r=await fetch(API+path,{headers:{'Content-Type':'application/json','X-Init-Data':(window.Telegram&&Telegram.WebApp&&Telegram.WebApp.initData)||''},...opts,body:opts.body?JSON.stringify(opts.body):undefined});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(j.error||'Ошибка сервера');
+  return j;
+}
+async function loadUser(){
+  try{
+    const u=await api('/api/user/'+encodeURIComponent(ADDR));
+    S.gram=u.gram;S.stars=u.stars;S.stake=u.stake;S.own=u.own||{u:[],n:[],g:[],d:[]};
+    if(!S.own.d)S.own.d=[];
+    const h=await api('/api/history/'+encodeURIComponent(ADDR));
+    S.hist=h;
+  }catch(e){console.error(e);toast('Нет связи с сервером')}
+}
+
+function lock(){document.body.style.overflow=($('ov').classList.contains('on')||$('sh').classList.contains('on'))?'hidden':''}
+function ov(h){$('ov').innerHTML='<div class="pg">'+h+'</div>';$('ov').classList.add('on');$('ov').scrollTop=0;lock()}
+function ovx(){$('ov').classList.remove('on');lock()}
+function sh(h){$('sh').innerHTML='<div class="pan"><i class="hdl"></i>'+h+'</div>';$('sh').classList.add('on');lock()}
+function shx(){$('sh').classList.remove('on');lock()}
+function hd(t){return '<div class="hd"><h3>'+t+'</h3><button class="rb" data-a="shx">'+ic('x')+'</button></div>'}
+function tp(t){return '<div class="t2"><button class="rb" data-a="ovx">'+ic('back')+'</button><b>'+t+'</b></div>'}
+
+function tabW(){
+  const doms=(S.own.d||[]).length;
+  const primary=doms?S.own.d[0]:DOM;
+  return '<div class="bal"><b>'+fg(S.gram)+' <em>GRAM</em></b><button class="ad" data-a="cpy">'+esc(primary)+ic('copy')+'</button></div>'+
+  '<div class="qa">'+
+  '<div><button class="rc" data-a="send">'+ic('up')+'</button><span>Отправить</span></div>'+
+  '<div><button class="rc" data-a="recv">'+ic('down')+'</button><span>Получить</span></div>'+
+  '<div><button class="rc" data-a="domain">'+ic('globe')+'</button><span>Домен</span></div>'+
+  '<div><button class="rc" data-a="tab" data-k="m">'+ic('store')+'</button><span>Маркет</span></div></div>'+
+  '<div class="two"><button class="bx" data-a="swap">'+ic('swap')+'<b>Обмен</b><small>GRAM ↔ ★</small></button>'+
+  '<button class="bx" data-a="stake">'+ic('trend')+'<b>Стейкинг</b><small>от 2%/сутки</small></button></div>'+
+  '<h2>Активы</h2><div class="lst">'+
+  '<button class="rw" data-a="asset" data-k="g">'+coin('g')+'<div class="g"><b>GRAM</b><small>1 GRAM = '+RATE+' ★</small></div><div class="r">'+fg(S.gram)+'</div></button>'+
+  '<button class="rw" data-a="asset" data-k="s">'+coin('s')+'<div class="g"><b>PearStars</b><small>Звёзды</small></div><div class="r">'+fg(S.stars)+'<br><small>≈ '+fg(S.stars/RATE)+'</small></div></button>'+
+  (doms?'<button class="rw" data-a="domain">'+coin('d')+'<div class="g"><b>Домены .pear</b><small>'+doms+' шт.</small></div><div class="r">'+doms+'</div></button>':'')+
+  '</div>';
+}
+
+function tabC(){
+  let html='<h1>Коллекция</h1>';
+  const sec=[{k:'d',t:'Домены .pear',i:'globe'},{k:'u',t:'Юзернеймы',i:'at'},{k:'n',t:'Номера',i:'phone'},{k:'g',t:'Подарки',i:'gift'}];
+  let any=false;
+  sec.forEach(s=>{
+    const list=S.own[s.k]||[];
+    if(list.length){any=true;html+='<h2 style="margin-top:16px">'+s.t+' <span style="color:var(--mu);font-size:14px">'+list.length+'</span></h2><div class="lst">';
+      list.forEach(n=>{html+='<div class="rw">'+coin(s.k==='d'?'d':s.k==='n'?'n':'g')+'<div class="g"><b>'+esc(n)+'</b><small>'+s.t+'</small></div></div>'});
+      html+='</div>'}
+  });
+  if(!any)html+='<div class="emp">Пока пусто.<br>Купите домен за 10 000 ★ или предметы на маркете.</div>';
+  return html;
+}
+
+function tabM(){
+  return '<h1>Маркет</h1>'+
+  '<div class="chips">'+[['u','Юзернеймы'],['n','Номера'],['g','Подарки'],['d','Домены']].map(([k,l])=>'<button class="chp '+(mkT===k?'on':'')+'" data-a="mkt" data-k="'+k+'">'+l+'</button>').join('')+'</div>'+
+  '<div id="mk-list" class="emp">Загрузка…</div>'+
+  (mkT==='d'?'<button class="pb" data-a="domain" style="margin-top:14px">Купить новый домен за 10 000 ★</button>':'');
+}
+
+async function loadMarket(){
+  const el=$('mk-list');
+  if(!el)return;
+  try{
+    const items=await api('/api/market?t='+mkT);
+    if(!items.length){el.innerHTML='<div class="emp">Лотов пока нет</div>';return}
+    el.innerHTML='<div class="lst">'+items.map(x=>'<button class="rw" data-a="lot" data-i="'+esc(x.id)+'" data-n="'+esc(x.n)+'" data-p="'+x.p+'" data-t="'+x.t+'" data-s="'+esc(x.s||'')+'">'+
+      coin(x.t==='d'?'d':x.t==='n'?'n':x.t==='u'?'g':'g')+'<div class="g"><b>'+esc(x.n)+'</b><small>'+esc(x.s||'—')+'</small></div><div class="r">'+fg(x.p)+(x.t==='d'?' GRAM':' GRAM')+'</div></button>').join('')+'</div>';
+  }catch(e){el.innerHTML='<div class="emp">'+esc(e.message)+'</div>'}
+}
+
+function render(){
+  const t={w:tabW,c:tabC,m:tabM}[tab]();
+  $('app').innerHTML=(tab==='c'||tab==='m'?'':'<div class="bar"><button class="ib" data-a="scan">'+ic('scan')+'</button><button class="pill" data-a="wl">'+ic('wf')+'Кошелёк'+ic('chev')+'</button><div class="rt"><button class="ib" data-a="hist">'+ic('clock')+'</button><button class="ib" data-a="set">'+ic('gear')+'</button></div></div>')+t+
+  '<nav>'+[['w','Кошелёк','wf'],['c','Коллекция','df'],['m','Маркет','sf']].map(n=>'<button data-a="tab" data-k="'+n[0]+'" class="'+(tab===n[0]?'on':'')+'">'+ic(n[2],1)+n[1]+'</button>').join('')+'</nav>';
+  if(tab==='m')loadMarket();
+}
+
+const A={
+  tab(d){tab=d.k;render();window.scrollTo(0,0)},
+  mkt(d){mkT=d.k;render()},
+  cpy(){navigator.clipboard.writeText(ADDR).catch(()=>{});toast('Адрес скопирован')},
+  shx,ovx,
+
+  domain(){
+    ov(tp('Домены .pear')+
+      '<div class="domain-card"><div style="color:var(--mu);font-size:13px">Новый домен</div><div class="big">10 000 ★</div>'+
+      '<div style="color:var(--mu);font-size:13px;margin-top:4px">Баланс: <b style="color:#fff">'+fg(S.stars)+' ★</b></div></div>'+
+      '<p class="sub">Имя без .pear (3–20 символов)</p>'+
+      '<div class="inp"><input id="dname" placeholder="cool" autocomplete="off" autocapitalize="off" spellcheck="false"><span style="color:var(--mu)">.pear</span></div>'+
+      '<div class="msg" id="msg"></div><div id="dcheck" style="margin-top:8px;font-size:13px;text-align:center;color:var(--mu)"></div>'+
+      '<div class="fl"></div><button class="pb" id="dbuy" data-a="dobuy" disabled>Купить за 10 000 ★</button>'+
+      ((S.own.d||[]).length?'<button class="pb sc" data-a="mydomains">Мои домены</button>':''));
+    const inp=$('dname');let timer;
+    inp.oninput=()=>{clearTimeout(timer);const v=inp.value.trim().toLowerCase().replace(/\.pear$/,'');$('dbuy').disabled=true;$('dcheck').textContent='';
+      if(v.length<3)return;timer=setTimeout(async()=>{try{const r=await api('/api/domain/check?name='+encodeURIComponent(v));
+        if(r.available){$('dcheck').innerHTML='<span style="color:var(--ok)">✓ '+esc(r.name)+' свободен</span>';$('dbuy').disabled=S.stars<DOMAIN_PRICE}
+        else $('dcheck').innerHTML='<span style="color:var(--no)">✗ Занят</span>'}catch(e){$('dcheck').textContent=e.message}},350)};
+  },
+  async dobuy(){
+    const name=$('dname').value.trim().toLowerCase().replace(/\.pear$/,'');
+    if(!name)return;
+    try{const r=await api('/api/domain/buy',{method:'POST',body:{address:ADDR,name}});
+      S.stars=r.stars;S.own=r.own;render();
+      ov('<div class="fl cen"><svg class="ok" viewBox="0 0 80 80"><circle cx="40" cy="40" r="38"/><path d="M24 41l11 11 21-24"/></svg><h1>Домен куплен!</h1><p class="sub"><b>'+esc(r.domain)+'</b></p></div><button class="pb" data-a="ovx">Отлично</button>');
+      toast(r.domain+' теперь ваш')}catch(e){$('msg').textContent=e.message}
+  },
+  mydomains(){
+    const list=(S.own.d||[]).map(d=>'<div class="rw">'+coin('d')+'<div class="g"><b>'+esc(d)+'</b><small>Ваш домен</small></div></div>').join('');
+    ov(tp('Мои домены')+'<div class="lst">'+(list||'<div class="emp">Нет доменов</div>')+'</div><div class="fl"></div><button class="pb sc" data-a="ovx">Закрыть</button>');
+  },
+
+  async lot(d){
+    if(d.t==='d'){
+      sh(hd('Купить домен')+'<div class="bn" style="font-size:22px;margin:8px 0">'+esc(d.n)+'</div>'+kv('Продавец',esc(d.s))+kv('Цена',fg(d.p)+' GRAM')+kv('Ваш баланс',fg(S.gram)+' GRAM')+
+        '<button class="pb" data-a="buydom" data-i="'+d.i+'" style="margin-top:14px">Купить</button>');
+      return;
+    }
+    sh(hd('Лот')+'<div class="bn" style="font-size:20px;margin:8px 0">'+esc(d.n)+'</div>'+kv('Продавец',esc(d.s))+kv('Цена',fg(d.p)+' GRAM')+
+      '<button class="pb" data-a="buylot" data-i="'+d.i+'" data-n="'+esc(d.n)+'" data-p="'+d.p+'" data-t="'+d.t+'" style="margin-top:14px">Купить</button>');
+  },
+  async buydom(d){
+    try{const r=await api('/api/domain/buy-listing',{method:'POST',body:{address:ADDR,listingId:d.i}});
+      S.gram=r.gram;S.own=r.own;shx();render();toast('Домен '+r.domain+' куплен!')}catch(e){toast(e.message)}
+  },
+  async buylot(d){
+    try{const r=await api('/api/buy',{method:'POST',body:{address:ADDR,lotId:d.i,name:d.n,price:+d.p,t:d.t}});
+      S.gram=r.gram;S.own=r.own;shx();render();toast('Куплено: '+d.n)}catch(e){toast(e.message)}
+  },
+
+  async hist(){
+    ov(tp('История')+'<div id="hist-list" class="emp">Загрузка…</div>');
+    try{const h=await api('/api/history/'+encodeURIComponent(ADDR));S.hist=h;
+      let html='',last='';const z=new Date().toDateString(),y=new Date(Date.now()-864e5).toDateString();
+      h.forEach(x=>{const d=new Date(x.ts);const l=d.toDateString()===z?'Сегодня':d.toDateString()===y?'Вчера':d.toLocaleDateString('ru-RU',{day:'numeric',month:'long'});
+        if(l!==last){html+='<div class="dh">'+l+'</div>';last=l}
+        const out=x.ty==='out'||x.ty==='stk'||x.ty==='mk'||x.ty==='domain';
+        const ti={out:'Отправка',in:'Получение',swap:'Обмен',stk:'Стейкинг',unstk:'Вывод',mk:'Покупка',domain:'Домен'}[x.ty]||x.ty;
+        html+='<div class="lst" style="margin-bottom:6px"><div class="rw"><div class="hi'+(out?'':' in')+'">'+ic(x.ty==='swap'?'swap':x.ty==='domain'?'globe':x.ty==='stk'||x.ty==='unstk'?'trend':out?'up':'down')+'</div><div class="g"><b>'+ti+'</b><small>'+esc(shortTo(x.to||''))+' · '+d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})+'</small></div><div class="r"><b class="'+(out?'':'pos')+'">'+(out?'−':'+')+fa(x.c,x.a)+'</b></div></div></div>'});
+      $('hist-list').outerHTML=html||'<div class="emp">Операций пока нет</div>'}catch(e){$('hist-list').textContent=e.message}
+  },
+  async set(){
+    let stats={};
+    try{stats=await api('/api/stats')}catch(e){}
+    ov(tp('Настройки')+
+      '<div class="stats"><div class="stt"><b>'+(stats.users||'—')+'</b><small>Юзеров</small></div><div class="stt"><b>'+(stats.domains||'—')+'</b><small>Доменов</small></div><div class="stt"><b>'+(stats.sends||0)+'</b><small>Переводов</small></div></div>'+
+      '<div class="lst"><button class="rw" data-a="cpy"><div class="g"><b>Адрес</b><small>'+shortTo(ADDR)+'</small></div>'+ic('copy')+'</button>'+
+      '<div class="rw"><div class="g"><b>Версия</b><small>PearWallet 2.0 · Render-ready</small></div></div></div>'+
+      '<div class="fl"></div>'+(DEMO_MODE?'<button class="pb" data-a="faucet">+1000 GRAM (faucet)</button>':'')+'<button class="pb sc" data-a="ovx">Закрыть</button>');
+  },
+  async faucet(){try{const r=await api('/api/faucet',{method:'POST',body:{address:ADDR}});S.gram=r.gram;render();ovx();toast('+1000 GRAM')}catch(e){toast(e.message)}},
+  scan(){ov(tp('Сканер')+'<p class="sub">Вставьте адрес</p><div class="inp n" style="border-color:#263243"><input id="sa" placeholder="адрес / .pear / @контакт"></div><div class="msg" id="msg"></div><div class="fl"></div><button class="pb" data-a="sc2">Далее</button>')},
+  sc2(){const v=$('sa').value.trim();if(!okTo(v))return $('msg').textContent='Некорректный адрес';SD={to:v,c:'g',am:'',cm:''};s1()},
+  wl(){sh(hd('Кошельки')+'<div class="lst"><div class="rw"><div class="coin">'+ic('wf',1)+'</div><div class="g"><b>Основной</b><small>'+DOM+'</small></div></div></div>')},
+  recv(){
+    const primary=(S.own.d&&S.own.d[0])||DOM;
+    sh(hd('Получить')+'<p class="sub">QR или адрес</p><div class="qc"><div class="qr">'+qr(ADDR)+'</div><b>'+esc(primary)+'</b><code>'+ADDR+'</code></div>'+
+    '<div class="act" style="margin-top:10px"><button data-a="cpy">'+ic('copy')+'Копировать</button><button data-a="share">'+ic('share')+'Поделиться</button></div>');
+  },
+  share(){navigator.share?.({title:'PearWallet',text:ADDR}).catch(()=>A.cpy())},
+  asset(d){const s=d.k==='s';sh(hd(s?'PearStars':'GRAM')+coin(d.k)+'<div class="bn">'+(s?fg(S.stars)+' ★':fg(S.gram)+' GRAM')+'</div><p class="sub">'+(s?'≈ '+fg(S.stars/RATE)+' GRAM':'Основная валюта')+'</p>'+
+    '<div class="act"><button class="p" data-a="send" data-k="'+d.k+'">'+ic('up')+'Отправить</button><button data-a="recv">'+ic('down')+'Получить</button>'+
+    '<button class="'+(s?'w':'')+'" data-a="swap" data-k="'+d.k+'">'+ic('swap')+'Обменять</button>'+(s?'<button data-a="dep">'+ic('down')+'Пополнить</button><button data-a="wd">'+ic('up')+'Вывести</button>':'')+(s?'':'<button data-a="stake">'+ic('trend')+'Стейкинг</button>')+'</div>')},
+  send(d){shx();SD={to:'',c:(d&&d.k==='s')?'s':'g',am:'',cm:''};s1()},
+  paste(){navigator.clipboard.readText().then(t=>{$('to').value=t.trim();$('to').oninput()}).catch(()=>toast('Вставьте вручную'))},
+  mx(){const m=SD.c==='s'?S.stars:Math.max(0,S.gram-FEE);$('am').value=SD.c==='s'?Math.floor(m):+m.toFixed(4)},
+  async pay(){try{const a=parseFloat(SD.am);const r=await api('/api/send',{method:'POST',body:{from:ADDR,to:SD.to,amount:a,currency:SD.c,comment:SD.cm}});
+    S.gram=r.from.gram;S.stars=r.from.stars;render();shx();
+    ov('<div class="fl cen"><svg class="ok" viewBox="0 0 80 80"><circle cx="40" cy="40" r="38"/><path d="M24 41l11 11 21-24"/></svg><h1>Отправлено</h1><p class="sub">'+fa(SD.c,a)+' → '+esc(shortTo(SD.to))+'</p></div><button class="pb" data-a="ovx">Готово</button>')}catch(e){toast(e.message)}},
+  swap(d){shx();SW.d=(d&&d.k==='g')?'g':'s';sw()},
+  sd(){SW.d=SW.d==='s'?'g':'s';sw()},
+  async sw2(){try{const a=parseFloat($('am').value);if(!(a>0))return;const r=await api('/api/swap',{method:'POST',body:{address:ADDR,fromCurrency:SW.d,amount:a}});
+    S.gram=r.gram;S.stars=r.stars;render();ovx();toast('Обмен выполнен')}catch(e){$('msg').textContent=e.message}},
+  dep(){shx();ov(tp('Пополнение')+'<p class="sub">Оплата настоящими Telegram Stars</p><div class="amt"><input id="am" type="number" inputmode="numeric" placeholder="0"></div><div class="msg" id="msg"></div><div class="fl"></div><button class="pb" data-a="dep2">Оплатить</button>')},
+  async dep2(){const a=Math.floor(+$('am').value);if(!(a>=1))return $('msg').textContent='Минимум 1 ★';
+    try{const r=await api('/api/deposit',{method:'POST',body:{amount:a}});const t=window.Telegram&&Telegram.WebApp;
+      if(!t||!t.openInvoice)return $('msg').textContent='Откройте кошелёк в Telegram';
+      t.openInvoice(r.link,st=>{if(st==='paid'){toast('Оплачено, зачисляем…');setTimeout(async()=>{await loadUser();render();ovx()},2500)}else if(st==='failed')toast('Платёж не прошёл')})
+    }catch(e){$('msg').textContent=e.message}},
+  async wd(){shx();try{const l=await api('/api/payments');
+    ov(tp('Вывод ★')+'<p class="sub">Возврат Stars на ваш аккаунт Telegram</p>'+(l.length?'<div class="lst">'+l.map(p=>'<button class="rw" data-a="wd2" data-i="'+p.id+'"><div class="g"><b>'+p.amount+' ★</b><small>'+new Date(p.ts).toLocaleDateString('ru-RU')+'</small></div><div class="r">Вернуть</div></button>').join('')+'</div>':'<div class="emp">Нет платежей для возврата</div>')+'<div class="msg" id="msg"></div>')}catch(e){toast(e.message)}},
+  async wd2(d){try{await api('/api/withdraw',{method:'POST',body:{chargeId:d.i}});await loadUser();render();ovx();toast('Stars возвращены')}catch(e){const m=$('msg');m?m.textContent=e.message:toast(e.message)}},
+  stake(){shx();stk()},
+  async st1(){try{const a=parseFloat($('am').value);const r=await api('/api/stake',{method:'POST',body:{address:ADDR,amount:a}});S.gram=r.gram;S.stake=r.stake;render();stk();toast('Застейкано')}catch(e){$('msg').textContent=e.message}},
+  async st2(){try{const r=await api('/api/unstake',{method:'POST',body:{address:ADDR}});S.gram=r.gram;S.stake=0;render();stk();toast('Выведено')}catch(e){toast(e.message)}}
+};
+
+function s1(){ov(tp('Отправка')+'<h1>Кому?</h1><div class="inp"><input id="to" placeholder="адрес / .pear / @контакт"><a data-a="paste">Вставить</a></div><div class="fl"></div><button class="pb" id="nx" disabled>Далее</button>');
+  const i=$('to');i.value=SD.to||'';i.oninput=()=>{SD.to=i.value.trim();$('nx').disabled=!okTo(SD.to)};i.oninput();$('nx').onclick=s2}
+function s2(){ov(tp('Сумма')+'<div class="seg"><button data-a="sc" data-k="g" class="'+(SD.c==='g'?'on':'')+'">GRAM</button><button data-a="sc" data-k="s" class="'+(SD.c==='s'?'on':'')+'">★ Звёзды</button></div>'+
+  '<div class="amt"><input id="am" type="number" step="any" inputmode="decimal" placeholder="0"></div><div class="hint">Доступно: '+fa(SD.c,SD.c==='s'?S.stars:S.gram)+' · <a class="lk" data-a="mx">Макс</a></div>'+
+  '<div class="inp n" style="border-color:#263243"><input id="cm" maxlength="100" placeholder="Комментарий"></div><div class="msg" id="msg"></div><div class="fl"></div><button class="pb" data-a="s2">Далее</button>');
+  $('am').value=SD.am||'';$('cm').value=SD.cm||'';document.querySelector('.t2 .rb').onclick=()=>{SD.am=$('am').value;SD.cm=$('cm').value;s1()}}
+A.sc=d=>{SD.am=$('am')?.value;SD.cm=$('cm')?.value;SD.c=d.k;s2()};
+A.s2=()=>{const a=parseFloat($('am').value);SD.am=$('am').value;SD.cm=$('cm').value;const f=SD.c==='g'?FEE:0;
+  if(!(a>0))return $('msg').textContent='Сумма > 0';if(SD.c==='s'&&a%1)return $('msg').textContent='Только целые звёзды';
+  if(a+f>(SD.c==='s'?S.stars:S.gram)+1e-9)return $('msg').textContent='Недостаточно средств';
+  sh(hd('Подтвердите')+'<div class="bn" style="margin:8px 0 12px">'+fa(SD.c,a)+'</div>'+kv('Кому',esc(shortTo(SD.to)))+(SD.cm?kv('Комментарий',esc(SD.cm)):'')+kv('Комиссия',f?fg(f)+' GRAM':'Без комиссии')+'<button class="pb" data-a="pay" style="margin-top:14px">Подтвердить</button>')};
+
+function sw(){const f=SW.d,t=f==='s'?'g':'s';
+  ov(tp('Обмен')+'<div class="lst" style="padding:12px;margin-bottom:8px"><small style="color:var(--mu)">Отдаёте</small><div class="rw" style="padding:4px 0;width:100%;margin:0;border:0">'+coin(f)+'<b style="flex:1">'+(f==='s'?'PearStars':'GRAM')+'</b><span style="color:var(--mu)">'+fa(f,f==='s'?S.stars:S.gram)+'</span></div>'+
+  '<input id="am" type="number" step="any" inputmode="decimal" placeholder="0" style="width:100%;background:none;border:0;outline:0;color:#fff;font:800 30px Montserrat,sans-serif"></div>'+
+  '<button class="rb" data-a="sd" style="margin:0 auto 8px">'+ic('swap')+'</button>'+
+  '<div class="lst" style="padding:12px"><small style="color:var(--mu)">Получаете</small><div class="rw" style="padding:4px 0;width:100%;margin:0;border:0">'+coin(t)+'<b style="flex:1">'+(t==='s'?'PearStars':'GRAM')+'</b></div><div id="out" style="font:800 30px Montserrat,sans-serif">0</div></div>'+
+  '<div class="hint" style="margin-top:10px">1 GRAM = '+RATE+' ★</div><div class="msg" id="msg"></div><div class="fl"></div><button class="pb" data-a="sw2">Обменять</button>');
+  $('am').oninput=function(){const a=parseFloat(this.value)||0;$('out').textContent=fa(t,f==='s'?a/RATE:Math.floor(a*RATE))}}
+function stk(){ov(tp('Стейкинг')+'<div class="bal" style="margin:6px 0 16px"><small style="color:var(--mu)">В стейкинге</small><br><b>'+fg(S.stake)+' <em>GRAM</em></b><p class="sub" style="margin-top:4px">Доход от 2%/сутки (демо)</p></div>'+
+  '<div class="inp n" style="border-color:#263243"><input id="am" type="number" step="any" inputmode="decimal" placeholder="Сумма GRAM"></div>'+
+  '<div class="hint" style="margin-top:6px">Доступно: '+fg(S.gram)+'</div><div class="msg" id="msg"></div><div class="fl"></div>'+
+  '<button class="pb" data-a="st1">Застейкать</button><button class="pb sc" data-a="st2">Вывести всё</button>')}
+
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b&&A[b.dataset.a])A[b.dataset.a](b.dataset);else if(e.target===$('sh'))shx()});
+(async()=>{
+  try{
+    const tg=window.Telegram&&Telegram.WebApp;
+    if(tg&&tg.initData){tg.ready();tg.expand();
+      const r=await api('/api/tg-auth',{method:'POST',body:{initData:tg.initData}});
+      ADDR=r.address;}
+  }catch(e){console.warn('tg-auth:',e.message)}
+  try{const hl=await api('/api/health');DEMO_MODE=!!hl.demo}catch(e){}
+  await loadUser();render();
+})();
+</script>
+</body>
+</html>

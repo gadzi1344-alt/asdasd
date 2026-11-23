@@ -1,0 +1,15 @@
+{
+  "name": "pearwallet",
+  "version": "2.0.0",
+  "description": "PearWallet — масштабный multi-user кошелёк с доменами .pear, маркетом, стейкингом и переводами. Готов к деплою на Render.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": ["wallet", "gram", "stars", "pear", "telegram", "render"],
+  "license": "MIT"
+}
